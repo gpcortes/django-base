@@ -3,13 +3,13 @@
 {% load humanize i18n %}
 <html lang="pt-br">
 <head>
-  {% block title %}{% endblock %}
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- Add additional CSS in static file -->
-  {% load static %}
-  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-  {{ form.media.css }}
+    {% block title %}{% endblock %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Add additional CSS in static file -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    {{ form.media.css }}
 </head>
 <body>
     {% block sidebar %}<!-- insert default navigation text for every page -->{% endblock %}
