@@ -1,5 +1,5 @@
 {
-    "python.defaultInterpreterPath": "/home/python/app/.venv/python",
+    "python.defaultInterpreterPath": "/home/python/app/.venv/bin/python",
     "python.terminal.activateEnvInCurrentTerminal": true,
     "python.terminal.activateEnvironment": true,
     "python.analysis.typeCheckingMode": "basic",
