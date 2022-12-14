@@ -1,4 +1,4 @@
-FROM python:3.8-slim
+FROM mcr.microsoft.com/vscode/devcontainers/python:3.8-buster
 
 ENV LANG pt_BR.UTF-8
 ENV LC_ALL pt_BR.UTF-8
@@ -30,6 +30,6 @@ ENV PATH="/home/appuser/app/.venv/bin:$PATH"
 ADD Pipfile.lock ./
 ADD Pipfile ./
 
-RUN pipenv install --system
+RUN pipenv install
 
-CMD [ "gunicorn", "--access-logfile", "-", "--workers", "3", "--bind", "0.0.0.0:8000", "core" ]
+CMD [ "tail", "-f", "/dev/null" ]

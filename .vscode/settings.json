@@ -1,5 +1,8 @@
 {
-    "python.defaultInterpreterPath": "/home/python/app/.venv/bin/python",
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true,
+    "editor.formatOnSaveMode": "modifications",
+    "python.defaultInterpreterPath": "/home/appuser/app/.venv/bin/python",
     "python.terminal.activateEnvInCurrentTerminal": true,
     "python.terminal.activateEnvironment": true,
     "python.analysis.typeCheckingMode": "basic",
@@ -25,7 +28,19 @@
     },
     "python.languageServer": "Default",
     "python.linting.enabled": true,
-    "python.linting.pylintEnabled": true,
-    "python.linting.pylintPath": "pylint",
-    "python.formatting.autopep8Path": "autopep8"
+    "python.linting.pylamaEnabled": true,
+    "python.linting.pylamaPath": "/home/appuser/app/.venv/bin/pylama",
+    "python.formatting.autopep8Path": "/home/appuser/app/.venv/bin/autopep8",
+    "python.formatting.provider": "autopep8",
+    "files.associations": {
+        "**/templates/*.html": "django-html",
+        "**/templates/*": "django-txt",
+        "**/requirements{/**,*}.{txt,in}": "pip-requirements",
+        "*.html": "html"
+    },
+    "emmet.includeLanguages": {
+        "django-html": "html"
+    },
+    "html.format.indentInnerHtml": true,
+    "html.format.indentHandlebars": true,
 }
