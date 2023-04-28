@@ -1,4 +1,4 @@
-FROM python:3.8-slim
+FROM python:3.10-slim
 
 ENV LANG pt_BR.UTF-8
 ENV LC_ALL pt_BR.UTF-8
@@ -7,7 +7,12 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONFAULTHANDLER=1
 ENV PYTHONUNBUFFERED=1
 
-RUN adduser -u 1000 --disabled-password --gecos "" appuser && chown -R appuser /home/appuser
+ARG APP_USER_NAME
+ARG APP_UID
+ARG APP_GID
+ARG APP_NAME
+
+RUN adduser -u $APP_UID --disabled-password --gecos "" $APP_USER_NAME && chown -R $APP_USER_NAME /home/$APP_USER_NAME
 
 RUN apt-get update && apt-get install git -y
 
@@ -19,10 +24,6 @@ RUN sed -i '/pt_BR.UTF-8/s/^#//g' /etc/locale.gen \
     && dpkg-reconfigure --frontend noninteractive locales \
     && update-locale LANG=pt_BR.UTF-8 LANGUAGE=pt_BR.UTF-8 LC_ALL=pt_BR.UTF-8
 
-USER appuser
-
-WORKDIR /home/appuser/app
-
 ENV PIPENV_VENV_IN_PROJECT=True
 ENV PIPENV_SITE_PACKAGES=True
 ENV PATH="/home/appuser/app/.venv/bin:$PATH"
@@ -31,5 +32,9 @@ ADD Pipfile.lock ./
 ADD Pipfile ./
 
 RUN pipenv install --system
+
+USER $APP_USER_NAME
+
+WORKDIR /home/$APP_USER_NAME/$APP_NAME
 
 CMD [ "gunicorn", "--access-logfile", "-", "--workers", "3", "--bind", "0.0.0.0:8000", "core" ]

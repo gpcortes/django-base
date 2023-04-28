@@ -1,0 +1,15 @@
+<div class="position-absolute bottom-0 end-0">
+    {% for message in messages %}
+        <div class="toast fade mb-5 me-3" role="alert" data-bs-animation="true">
+            <div class="toast-header {{ message.tags }} gap-2">
+                <strong class="me-auto text-white">Mensagem</strong>
+                <button type="button"
+                        class="btn-close btn-close-white"
+                        data-bs-dismiss="toast"></button>
+            </div>
+            <div class="toast-body">
+                <p class="m-0">{{ message }}</p>
+            </div>
+        </div>
+    {% endfor %}
+</div>

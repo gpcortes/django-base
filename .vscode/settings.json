@@ -2,10 +2,14 @@
     "editor.formatOnSave": true,
     "editor.formatOnType": true,
     "editor.formatOnSaveMode": "modifications",
-    "python.defaultInterpreterPath": "/home/appuser/app/.venv/bin/python",
+    "python.defaultInterpreterPath": "/home/app/src/.venv/bin/python",
     "python.terminal.activateEnvInCurrentTerminal": true,
     "python.terminal.activateEnvironment": true,
     "python.analysis.typeCheckingMode": "basic",
+    "python.autoComplete.extraPaths": [
+        "./src",
+        ".venv"
+    ],
     "terminal.integrated.profiles.linux": {
         "bash": {
             "path": "/bin/bash",
@@ -27,10 +31,13 @@
         }
     },
     "python.languageServer": "Default",
-    "python.linting.enabled": true,
-    "python.linting.pylamaEnabled": true,
-    "python.linting.pylamaPath": "/home/appuser/app/.venv/bin/pylama",
-    "python.formatting.autopep8Path": "/home/appuser/app/.venv/bin/autopep8",
+    "python.linting.enabled": false,
+    "python.linting.pylamaEnabled": false,
+    "python.linting.pylamaPath": "/home/app/src/.venv/bin/pylama",
+    "python.linting.pylintArgs": [
+        "--init-hook='import sys; sys.path.append(${workspaceFolder})'"
+    ],
+    "python.formatting.autopep8Path": "/home/app/src/.venv/bin/autopep8",
     "python.formatting.provider": "autopep8",
     "files.associations": {
         "**/templates/*.html": "django-html",
@@ -43,4 +50,11 @@
     },
     "html.format.indentInnerHtml": true,
     "html.format.indentHandlebars": true,
+    "html.autoClosingTags": true,
+    "html.format.enable": true,
+    "html.autoCreateQuotes": true,
+    "python.analysis.extraPaths": [
+        "./src",
+        ".venv"
+    ]
 }

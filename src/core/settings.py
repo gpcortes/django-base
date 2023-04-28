@@ -12,7 +12,9 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
-import sys
+import envconfiguration as config
+from django.contrib.messages import constants as messages
+from django.utils.translation import gettext_lazy as _
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,10 +29,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-6zxuf)s*w(js#cr91fi7pa=su(%b5$%%)9lc)y_i4rfmrcey)w'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DJANGO_DEBUG', False)
+DEBUG = True  # bool(config.DJANGO_DEBUG)  # type: ignore
 
 ALLOWED_HOSTS = ['*']
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.cett.org.br',
+    'http://*.cett.org.br',
+    'https://*.cett.dev.br',
+    'http://*.cett.dev.br',
+]
 
 # Application definition
 
@@ -41,16 +49,29 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'modules.accounts',
+    'modules.main',
+    'bootstrap5',
+    'crispy_forms',
+    'crispy_bootstrap5',
+    'fontawesome_5',
+    'compressor',
+    'django_minify_html',
+    'rosetta',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'modules.accounts.middleware.ProcessRequestMiddleware',
+    'core.middleware.ProjectMinifyHtmlMiddleware',
+    # 'django_minify_html.middleware.MinifyHtmlMiddleware',
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -111,7 +132,10 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
-LANGUAGE_CODE = 'pt-br'
+LANGUAGES = [
+    ('pt-BR', _('Brazil')),
+    ('en', _('English')),
+]
 
 TIME_ZONE = 'UTC'
 
@@ -132,10 +156,90 @@ USE_THOUSAND_SEPARATOR = False
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = [BASE_DIR / 'static',]
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
+)
+
+COMPRESS_OFFLINE = True
+LIBSASS_OUTPUT_STYLE = 'compressed'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+COMPRESS_PRECOMPILERS = (
+    ('text/x-scss', 'django_libsass.SassCompiler'),
+)
+COMPRESS_ENABLED = True
+COMPRESS_CSS_HASHING_METHOD = 'content'
+COMPRESS_FILTERS = {
+    'css': [
+        'compressor.filters.css_default.CssAbsoluteFilter',
+        'compressor.filters.cssmin.rCSSMinFilter',
+    ],
+    'js': [
+        'compressor.filters.jsmin.JSMinFilter',
+    ]
+}
+COMPRESS_ENABLED = True
+COMPRESS_CSS_HASHING_METHOD = 'content'
+COMPRESS_FILTERS = {
+    'css': [
+        'compressor.filters.css_default.CssAbsoluteFilter',
+        'compressor.filters.cssmin.rCSSMinFilter',
+    ],
+    'js': [
+        'compressor.filters.jsmin.JSMinFilter',
+    ]
+}
+LOGIN_URL = 'accounts/signin/'
+
+LOGOUT_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/'
+
+PUBLIC_URL_PATHS = [
+    'accounts',
+    'admin',
+]
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+
+CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_HOST = config.SMTP_SERVER  # type: ignore
+EMAIL_PORT = config.SMTP_PORT  # type: ignore
+EMAIL_HOST_USER = config.MAIL_ACCOUNT  # type: ignore
+EMAIL_HOST_PASSWORD = config.MAIL_PASSWORD  # type: ignore
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = config.MAIL_FROM  # type: ignore
+
+MESSAGE_TAGS = {
+    messages.DEBUG: 'bg-secondary',
+    messages.INFO: 'bg-secondary',
+    messages.SUCCESS: 'bg-success',
+    messages.WARNING: 'bg-warning',
+    messages.ERROR: 'bg-danger',
+}
+
+SESSION_COOKIE_AGE = 5 * 60
+SESSION_IDLE_TIMEOUT = 5 * 60
+
+LOCALE_PATHS = (
+    os.path.abspath(
+        os.path.join(
+            os.path.dirname(__file__),
+            '..', "locale")),
+)

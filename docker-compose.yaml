@@ -1,12 +1,37 @@
 version: '3'
 
 services:
-  app:
-    restart: always
-    build:
-      context: .
-      dockerfile: ./Dockerfile
-    environment:
-      DJANGO_DEBUG: ${DJANGO_DEBUG}
-    volumes:
-      - ./src:/home/appuser/app
+    app:
+        restart: always
+        build:
+            context: .
+            dockerfile: ./Dockerfile
+            args:
+                - APP_USER_NAME=${APP_USER_NAME}
+                - APP_UID=${APP_UID}
+                - APP_GID=${APP_GID}
+                - APP_NAME=${APP_NAME}
+        environment:
+            DJANGO_DEBUG: ${DJANGO_DEBUG}
+            SMTP_SERVER: ${SMTP_SERVER}
+            SMTP_PORT: ${SMTP_PORT}
+            MAIL_ACCOUNT: ${MAIL_ACCOUNT}
+            MAIL_PASSWORD: ${MAIL_PASSWORD}
+            MAIL_FROM: ${MAIL_FROM}
+        labels:
+            #Enable Traefk 
+            - "traefik.enable=true"
+            - "traefik.docker.network=backend"
+            
+            - "traefik.constraint-label-stack=projeto-cett"
+            - "traefik.http.services.projeto-cett.loadbalancer.server.port=8000"
+            #http
+            - "traefik.http.routers.projeto-cett_http.entrypoints=web"
+            - "traefik.http.routers.projeto-cett_http.rule=Host(`efg-index.${PRIMARY_DOMAIN_NAME}`)&&PathPrefix(`/`) || Host(`cotec-index.${PRIMARY_DOMAIN_NAME}`)&&PathPrefix(`/`)"
+            - "traefik.http.routers.projeto-cett_http.middlewares=https_redirect"
+            #https
+            - "traefik.http.routers.projeto-cett_https.rule=Host(`efg-index.${PRIMARY_DOMAIN_NAME}`)&&PathPrefix(`/`) || Host(`cotec-index.${PRIMARY_DOMAIN_NAME}`)&&PathPrefix(`/`)"
+            - "traefik.http.routers.projeto-cett_https.entrypoints=websecure"
+            - "traefik.http.routers.projeto-cett_https.tls.certresolver=letsencryptresolver"
+        volumes:
+            - ./src:/home/${APP_USER_NAME}/${APP_NAME}

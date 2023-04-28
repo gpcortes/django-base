@@ -14,12 +14,13 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-# from django.views.generic.base import RedirectView
-# from django.contrib.staticfiles.storage import staticfiles_storage
+from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
-    # path('favicon.ico', RedirectView.as_view(
-    #     url=staticfiles_storage.url('favicon.ico'))),
     path('admin/', admin.site.urls),
-]
+    path('poedit/', include('rosetta.urls')),
+    path('', include('modules.main.urls')),
+    path('accounts/', include('modules.accounts.urls')),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

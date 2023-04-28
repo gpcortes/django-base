@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block before_content %}
+    {{ header | safe }}
+{% endblock before_content %}
+{% block content %}
+    <div class="flex-grow-1 d-flex flex-row">
+        {{ nav | safe }}
+        <main class="flex-grow-1 d-flex m-0 p-3">
+            <div>
+                <div class="mb-3">
+                    <label for="formFile" class="form-label">Default file input example</label>
+                    <input class="form-control" type="file" id="formFile"/>
+                </div>
+                <div class="mb-3">
+                    <label for="formFileMultiple" class="form-label">Multiple files input example</label>
+                    <input class="form-control" type="file" id="formFileMultiple" multiple/>
+                </div>
+                <div class="mb-3">
+                    <label for="formFileDisabled" class="form-label">Disabled file input example</label>
+                    <input class="form-control" type="file" id="formFileDisabled" disabled/>
+                </div>
+                <div class="mb-3">
+                    <label for="formFileSm" class="form-label">Small file input example</label>
+                    <input class="form-control form-control-sm" id="formFileSm" type="file"/>
+                </div>
+                <div>
+                    <label for="formFileLg" class="form-label">Large file input example</label>
+                    <input class="form-control form-control-lg" id="formFileLg" type="file"/>
+                </div>
+                <div>
+                    <a href="{% url 'SignOut' %}" class="btn btn-primary">Sair</a>
+                </div>
+            </div>
+        </main>
+    </div>
+{% endblock content %}
+{% block after_content %}
+    {{ footer | safe }}
+{% endblock after_content %}

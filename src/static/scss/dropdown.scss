@@ -1,0 +1,7 @@
+@import '../bootstrap/scss/bootstrap';
+
+$dropdown-link-hover-color: darken($gray-900, 5%);
+$dropdown-link-hover-bg: $gray-100;
+
+$dropdown-link-active-color: $component-active-color;
+$dropdown-link-active-bg: $component-active-bg;

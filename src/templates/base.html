@@ -1,23 +1,66 @@
-
 <!DOCTYPE html>
-{% load humanize i18n %}
-<html lang="pt-br">
-<head>
-    {% block title %}{% endblock %}
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" type="image/x-icon" href="{% static  'favicon.ico' %}">
-    <!-- Add additional CSS in static file -->
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    {{ form.media.css }}
-</head>
-<body>
-    {% block sidebar %}<!-- insert default navigation text for every page -->{% endblock %}
-    {% block content %}<!-- default content text (typically empty) -->{% endblock %}
-    {% block scripts %}
-      {{ block.super }}    # retain the standard scripts that apply everywhere
-      {{ form.media.js }}     # add the form specific media/scripts
-    {% endblock %}
-</body>
+{% load static %}
+{% load compress %}
+{% load bootstrap5 %}
+{% if 'use_i18n'|bootstrap_setting %}
+    {% load i18n %}
+    {% get_current_language as LANGUAGE_CODE %}
+{% endif %}
+<html lang="{{ LANGUAGE_CODE|default:'en_us' }}">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8"/>
+        <meta name="keywords" content=""/>
+        <meta name="description" content=""/>
+        <meta name="author" content=""/>
+        <meta name="generator" content=""/>
+        <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}"/>
+        <!-- Add additional CSS in static file -->
+        <meta name="viewport"
+              content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+        <!-- Page title -->
+        <title>
+            {% block title %}
+            {% endblock title %}
+        </title>
+        <!-- Bootstrap CSS -->
+        {% compress css %}
+            <link href="{% static 'css/styles.css' %}" rel="stylesheet" media="screen"/>
+            {% block styles %}
+                {{ form.media.css }}
+            {% endblock styles %}
+            <link type="text/x-scss"
+                  href="{% static 'scss/style.scss' %}"
+                  rel="stylesheet"
+                  media="screen"/>
+        {% endcompress %}
+        {% comment %} {% bootstrap_css %} {% endcomment %}
+        <!-- Bootstrap JavaScript if it is in head -->
+        {% if 'javascript_in_head'|bootstrap_setting %}
+            {% bootstrap_javascript %}
+        {% endif %}
+        {% block extra_head %}
+        {% endblock extra_head %}
+    </head>
+    <body class="d-flex flex-column vh-100">
+        {% block before_content %}
+        {% endblock before_content %}
+        {% block content %}
+        {% endblock content %}
+        {% block after_content %}
+        {% endblock after_content %}
+        {% include "messages.html" %}
+        <!-- Bootstrap JavaScript if it is in body -->
+        {% if not 'javascript_in_head'|bootstrap_setting %}
+            {% bootstrap_javascript %}
+        {% endif %}
+        {% compress js %}
+            {% block scripts %}
+                {{ form.media.js }}
+            {% endblock scripts %}
+            {% block extra_script %}
+            {% endblock extra_script %}
+            <script src="{% static 'js/messages.js' %}"></script>
+        {% endcompress %}
+    </body>
 </html>
